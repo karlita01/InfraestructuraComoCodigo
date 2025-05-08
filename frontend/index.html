@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Minimarket J&J</title>
+</head>
+<body>
+  <h1>Bienvenido a la Tiendita de Don Pepe</h1>
+
+  <button onclick="generarInforme()">📝 Generar Informe</button>
+  <button onclick="gestionarProducto()">📦 Crear o Deshabilitar Producto</button>
+  <button onclick="realizarPedido()">🛒 Realizar Pedido</button>
+
+  <p id="respuesta"></p>
+
+  <script src="config.js"></script>
+  <script>
+
+    function generarInforme() {
+      fetch(`${base}/informes`, { method: "POST" })
+        .then(r => r.text()).then(m => mostrar(m));
+    }
+
+    function gestionarProducto() {
+      const producto = {
+        id: "prod001",
+        nombre: "Coca-Cola",
+        descripcion: "Bebida gaseosa",
+        cantidad: 100,
+        habilitado: true
+      };
+      fetch(`${base}/productos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(producto)
+      })
+        .then(r => r.text()).then(m => mostrar(m));
+    }
+
+    function realizarPedido() {
+      const pedido = {
+        id: "pedido001",
+        productos: [{ id: "prod001", cantidad: 2 }],
+        fecha: new Date().toISOString()
+      };
+      fetch(`${base}/pedidos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pedido)
+      })
+        .then(r => r.text()).then(m => mostrar(m));
+    }
+
+    function mostrar(mensaje) {
+      document.getElementById("respuesta").innerText = mensaje;
+    }
+  </script>
+</body>
+</html>
