@@ -45,6 +45,7 @@ El sistema sigue esta arquitectura:
 - **Generar informes:** Crear un informe con los pedidos de los últimos 30 días.
 - **Ejecución automática:** Generar informes automáticamente mediante EventBridge.
 - **Infraestructura como código:** Toda la infraestructura está escrita en Terraform.
+- **Creción Automátic de la Base de Datos con script:** Automatización para no estar cometiendo errores en la BD.
 
 ## 🛠️ Instalación de Dependencias para PostgreSQL
 
@@ -116,3 +117,4 @@ CREATE TABLE pedido_productos (
 - **Baltodano León, Karlita**  
 - **Morales Benites, Charlie**  
 - **Veneros Loloy, Johan**  
+- **Hilario Zavaleta, Benson**
