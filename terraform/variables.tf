@@ -1,3 +1,5 @@
-variable "nginx_external_port" {
-  description = "acá va nuestro puerto"
+variable "region" {
+  description = "Región donde se desplegarán los recursos en AWS"
+  type        = string
+  default     = "us-east-2"
 }

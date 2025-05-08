@@ -17,8 +17,11 @@
   <script>
 
     function generarInforme() {
-      fetch(`${base}/informes`, { method: "POST" })
-        .then(r => r.text()).then(m => mostrar(m));
+      fetch(`${base}/informes`, { method: "GET" })
+        .then(r => r.json())
+        .then(m => {
+        mostrar(m.body);
+      });
     }
 
     function gestionarProducto() {
@@ -39,8 +42,8 @@
 
     function realizarPedido() {
       const pedido = {
-        id: "pedido001",
-        productos: [{ id: "prod001", cantidad: 2 }],
+        idpedido: "pedido001",
+        productos: [{ idproducto: "prod001", cantidad: 2 }],
         fecha: new Date().toISOString()
       };
       fetch(`${base}/pedidos`, {

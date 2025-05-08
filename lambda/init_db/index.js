@@ -10,10 +10,10 @@ exports.handler = async () => {
   });
 
   try {
-    console.log("🔌 Conectando a PostgreSQL...");
+    console.log("Conectando a PostgreSQL...");
     await client.connect();
 
-    console.log("🛠️ Creando tabla productos...");
+    console.log("Creando tabla productos...");
     await client.query(`
       CREATE TABLE IF NOT EXISTS productos (
         id VARCHAR(255) PRIMARY KEY,
@@ -24,7 +24,7 @@ exports.handler = async () => {
       );
     `);
 
-    console.log("🛠️ Creando tabla pedidos...");
+    console.log("Creando tabla pedidos...");
     await client.query(`
       CREATE TABLE IF NOT EXISTS pedidos (
         idpedido VARCHAR(255) PRIMARY KEY,
@@ -32,7 +32,7 @@ exports.handler = async () => {
       );
     `);
 
-    console.log("🛠️ Creando tabla pedido_productos...");
+    console.log("Creando tabla pedido_productos...");
     await client.query(`
       CREATE TABLE IF NOT EXISTS pedido_productos (
         idpedido VARCHAR(255) NOT NULL,
@@ -44,21 +44,21 @@ exports.handler = async () => {
       );
     `);
 
-    console.log("✅ Tablas creadas correctamente");
+    console.log("Tablas creadas correctamente");
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Tablas creadas correctamente' }),
     };
   } catch (error) {
-    console.error('❌ Error al crear las tablas:', error);
+    console.error('Error al crear las tablas:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: 'Error al crear las tablas', error: error.message }),
     };
   } finally {
     await client.end().catch(e =>
-      console.warn("⚠️ Error al cerrar la conexión:", e)
+      console.warn("Error al cerrar la conexión:", e)
     );
-    console.log("🔒 Conexión cerrada");
+    console.log("Conexión cerrada");
   }
 };
