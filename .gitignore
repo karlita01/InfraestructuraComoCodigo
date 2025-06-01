@@ -12,3 +12,5 @@ lambda/init_db/package.json
 lambda/generar_informes/node_modules
 lambda/generar_informes/package-lock.json
 lambda/generar_informes/package.json
+terraform.tfstate.backup
+terraform.tfstate

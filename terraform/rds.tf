@@ -12,6 +12,7 @@ resource "aws_db_instance" "productos_db" {
   skip_final_snapshot  = true
 
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name 
 
   tags = {
     Name        = "ProductosDB"
@@ -22,6 +23,7 @@ resource "aws_db_instance" "productos_db" {
 resource "aws_security_group" "rds_sg" {
   name        = "rds-sg"
   description = "Allow access to RDS from the application"
+  vpc_id      = aws_vpc.main.id
 
   ingress {
     from_port   = 5432

@@ -36,7 +36,7 @@ exports.handler = async () => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(informe)  // Devolver el informe como JSON
+      body: JSON.stringify(informe) 
     };
   } catch (error) {
     console.error("Error al consultar la base de datos:", error);

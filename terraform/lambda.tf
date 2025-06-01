@@ -1,7 +1,3 @@
-data "aws_vpc" "default" {
-  default = true
-}
-
 data "archive_file" "lambda_generar_informes" {
   type        = "zip"
   source_dir  = "${path.module}/../lambda/generar_informes"
@@ -17,8 +13,8 @@ resource "aws_lambda_function" "generar_informes" {
   source_code_hash = data.archive_file.lambda_generar_informes.output_base64sha256
 
   vpc_config {
-    subnet_ids         = data.aws_subnets.default.ids
-    security_group_ids = [aws_security_group.lambda_sg.id]
+  subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
+  security_group_ids = [aws_security_group.lambda_sg.id]
   }
 
   environment {
@@ -47,7 +43,7 @@ resource "aws_lambda_function" "gestionar_pedidos" {
   source_code_hash = data.archive_file.lambda_gestionar_pedidos.output_base64sha256
 
   vpc_config {
-    subnet_ids         = data.aws_db_subnet_group.default.subnet_ids
+    subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 
@@ -83,7 +79,7 @@ resource "aws_lambda_function" "init_db" {
   source_code_hash = data.archive_file.lambda_init_db.output_base64sha256
 
   vpc_config {
-    subnet_ids         = data.aws_subnets.default.ids
+    subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 
@@ -135,7 +131,7 @@ resource "null_resource" "invoke_init_db" {
 resource "aws_security_group" "lambda_sg" {
   name        = "lambda-to-rds"
   description = "Permite a Lambda acceder a RDS"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = aws_vpc.main.id
 
   egress {
     from_port   = 0
@@ -164,7 +160,7 @@ resource "aws_lambda_function" "guardar_producto" {
   timeout          = 10
 
   vpc_config {
-    subnet_ids         = data.aws_subnets.default.ids
+    subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
     security_group_ids = [aws_security_group.lambda_sg.id]
   }
 
@@ -176,16 +172,5 @@ resource "aws_lambda_function" "guardar_producto" {
       DB_USER     = "dbadmin123"
       DB_PASSWORD = "dbadmin123"
     }
-  }
-}
-
-data "aws_db_subnet_group" "default" {
-  name = "default"
-}
-
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
   }
 }
