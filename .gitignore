@@ -15,3 +15,4 @@ lambda/generar_informes/package.json
 terraform.tfstate.backup
 terraform.tfstate
 terraform/secret.tfvars
+*.zip
