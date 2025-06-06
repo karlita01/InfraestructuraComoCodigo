@@ -1,3 +1,5 @@
+# Lambda function to generar informes
+
 data "archive_file" "lambda_generar_informes" {
   type        = "zip"
   source_dir  = "${path.module}/../lambda/generar_informes"
@@ -13,20 +15,16 @@ resource "aws_lambda_function" "generar_informes" {
   source_code_hash = data.archive_file.lambda_generar_informes.output_base64sha256
 
   vpc_config {
-  subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
-  security_group_ids = [aws_security_group.lambda_sg.id]
+  subnet_ids         = local.lambda_config.vpc.subnet_ids
+  security_group_ids = local.lambda_config.vpc.security_group_ids
   }
 
   environment {
-    variables = {
-      DB_HOST     = aws_db_instance.productos_db.address
-      DB_PORT     = "5432"
-      DB_NAME     = "productosdb"
-      DB_USER     = "dbadmin123"
-      DB_PASSWORD = "dbadmin123"
-    }
+    variables = local.lambda_config.environment
   }
 }
+
+# Lambda function to gestionar pedidos
 
 data "archive_file" "lambda_gestionar_pedidos" {
   type        = "zip"
@@ -43,27 +41,17 @@ resource "aws_lambda_function" "gestionar_pedidos" {
   source_code_hash = data.archive_file.lambda_gestionar_pedidos.output_base64sha256
 
   vpc_config {
-    subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
-    security_group_ids = [aws_security_group.lambda_sg.id]
+  subnet_ids         = local.lambda_config.vpc.subnet_ids
+  security_group_ids = local.lambda_config.vpc.security_group_ids
   }
 
   environment {
-    variables = {
-      DB_HOST     = aws_db_instance.productos_db.address
-      DB_PORT     = "5432"
-      DB_NAME     = "productosdb"
-      DB_USER     = "dbadmin123"
-      DB_PASSWORD = "dbadmin123"
-    }
+    variables = local.lambda_config.environment
   }
 }
 
+# Lambda function to initialize the database
 
-data "archive_file" "lambda_guardar_producto" {
-  type        = "zip"
-  source_dir  = "${path.module}/../lambda/gestionar_productos"
-  output_path = "${path.module}/gestionar_productos.zip"
-}
 data "archive_file" "lambda_init_db" {
   type        = "zip"
   source_dir  = "${path.module}/../lambda/init_db"
@@ -79,18 +67,12 @@ resource "aws_lambda_function" "init_db" {
   source_code_hash = data.archive_file.lambda_init_db.output_base64sha256
 
   vpc_config {
-    subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
-    security_group_ids = [aws_security_group.lambda_sg.id]
+  subnet_ids         = local.lambda_config.vpc.subnet_ids
+  security_group_ids = local.lambda_config.vpc.security_group_ids
   }
 
   environment {
-    variables = {
-      DB_HOST     = aws_db_instance.productos_db.address
-      DB_PORT     = "5432"
-      DB_NAME     = "productosdb"
-      DB_USER     = "dbadmin123"
-      DB_PASSWORD = "dbadmin123"
-    }
+    variables = local.lambda_config.environment
   }
 }
 
@@ -150,6 +132,14 @@ resource "aws_security_group_rule" "allow_lambda_access_rds" {
   source_security_group_id = aws_security_group.lambda_sg.id
 }
 
+# guardar producto lambda function
+
+data "archive_file" "lambda_guardar_producto" {
+  type        = "zip"
+  source_dir  = "${path.module}/../lambda/gestionar_productos"
+  output_path = "${path.module}/gestionar_productos.zip"
+}
+
 resource "aws_lambda_function" "guardar_producto" {
   function_name    = "guardar_producto"
   role             = aws_iam_role.lambda_rds_role.arn
@@ -160,17 +150,11 @@ resource "aws_lambda_function" "guardar_producto" {
   timeout          = 10
 
   vpc_config {
-    subnet_ids         = [aws_subnet.main.id, aws_subnet.secondary.id]
-    security_group_ids = [aws_security_group.lambda_sg.id]
+  subnet_ids         = local.lambda_config.vpc.subnet_ids
+  security_group_ids = local.lambda_config.vpc.security_group_ids
   }
 
   environment {
-    variables = {
-      DB_HOST     = aws_db_instance.productos_db.address
-      DB_PORT     = "5432"
-      DB_NAME     = "productosdb"
-      DB_USER     = "dbadmin123"
-      DB_PASSWORD = "dbadmin123"
-    }
+    variables = local.lambda_config.environment
   }
 }

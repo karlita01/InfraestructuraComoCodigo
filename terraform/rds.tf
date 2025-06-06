@@ -1,18 +1,18 @@
 resource "aws_db_instance" "productos_db" {
-  allocated_storage    = 20
-  max_allocated_storage = 100
-  engine               = "postgres"
-  engine_version       = "14.14"
-  instance_class       = "db.t3.micro"
-  db_name              = "productosdb" 
-  username             = "dbadmin123"      
-  password             = "dbadmin123" 
-  parameter_group_name = "default.postgres14"
-  publicly_accessible  = false
-  skip_final_snapshot  = true
+  allocated_storage    = local.rds_config.allocated_storage
+  max_allocated_storage = local.rds_config.max_allocated_storage
+  engine               = local.rds_config.engine
+  engine_version       = local.rds_config.engine_version
+  instance_class       = local.rds_config.instance_class
+  db_name              = local.rds_config.db_name
+  username             = local.rds_config.username
+  password             = local.rds_config.password
+  parameter_group_name = local.rds_config.parameter_group_name
+  publicly_accessible  = local.rds_config.publicly_accessible
+  skip_final_snapshot  = local.rds_config.skip_final_snapshot
 
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name 
+  db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
 
   tags = {
     Name        = "ProductosDB"
