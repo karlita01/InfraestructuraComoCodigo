@@ -55,8 +55,10 @@ Para que las funciones Lambda puedan interactuar con la base de datos PostgreSQL
    ```bash
    cd lambda/gestionar_productos
 2. Inicializa un proyecto Node.js (si aún no lo has hecho):
+    ```bash
     npm init -y
 3. Instala el paquete pg:
+    ```bash
     npm install pg
 ---
 
@@ -71,13 +73,11 @@ Para eliminar todos los recursos creados, sigue estos pasos:
    Ejecuta el siguiente comando para destruir únicamente las funciones Lambda:
 
    ```bash
-   $targets = @(
-     "-target=aws_lambda_function.generar_informes",
-     "-target=aws_lambda_function.gestionar_pedidos",
-     "-target=aws_lambda_function.init_db",
-     "-target=aws_lambda_function.guardar_producto"
-   )
-   terraform destroy $targets
+    terraform destroy `
+    "-target=aws_lambda_function.init_db" `
+    "-target=aws_lambda_function.guardar_producto" `
+    "-target=aws_lambda_function.gestionar_pedidos" `
+    "-target=aws_lambda_function.generar_informes"
 
     Y luego:
 
