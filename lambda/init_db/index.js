@@ -1,3 +1,5 @@
+// Logs en formato JSON para facilitar el análisis en index.js init_db
+
 const { Client } = require('pg');
 
 exports.handler = async () => {
@@ -10,10 +12,23 @@ exports.handler = async () => {
   });
 
   try {
-    console.log("Conectando a PostgreSQL...");
+    console.info(JSON.stringify({
+      event: "conexion_db",
+      status: "iniciando",
+      timestamp: new Date().toISOString()
+    }));
     await client.connect();
+    console.info(JSON.stringify({
+      event: "conexion_db",
+      status: "ok",
+      timestamp: new Date().toISOString()
+    }));
 
-    console.log("Creando tabla productos...");
+    console.info(JSON.stringify({
+      event: "creando_tabla",
+      tabla: "productos",
+      timestamp: new Date().toISOString()
+    }));
     await client.query(`
       CREATE TABLE IF NOT EXISTS productos (
         id VARCHAR(255) PRIMARY KEY,
@@ -24,7 +39,11 @@ exports.handler = async () => {
       );
     `);
 
-    console.log("Creando tabla pedidos...");
+    console.info(JSON.stringify({
+      event: "creando_tabla",
+      tabla: "pedidos",
+      timestamp: new Date().toISOString()
+    }));
     await client.query(`
       CREATE TABLE IF NOT EXISTS pedidos (
         idpedido VARCHAR(255) PRIMARY KEY,
@@ -32,7 +51,11 @@ exports.handler = async () => {
       );
     `);
 
-    console.log("Creando tabla pedido_productos...");
+    console.info(JSON.stringify({
+      event: "creando_tabla",
+      tabla: "pedido_productos",
+      timestamp: new Date().toISOString()
+    }));
     await client.query(`
       CREATE TABLE IF NOT EXISTS pedido_productos (
         idpedido VARCHAR(255) NOT NULL,
@@ -44,21 +67,37 @@ exports.handler = async () => {
       );
     `);
 
-    console.log("Tablas creadas correctamente");
+    console.info(JSON.stringify({
+      event: "tablas_creadas",
+      status: "ok",
+      timestamp: new Date().toISOString()
+    }));
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Tablas creadas correctamente' }),
     };
   } catch (error) {
-    console.error('Error al crear las tablas:', error);
+    console.error(JSON.stringify({
+      event: "error_crear_tablas",
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    }));
     return {
       statusCode: 500,
       body: JSON.stringify({ message: 'Error al crear las tablas', error: error.message }),
     };
   } finally {
     await client.end().catch(e =>
-      console.warn("Error al cerrar la conexión:", e)
+      console.warn(JSON.stringify({
+        event: "error_cerrando_conexion",
+        error: e.message,
+        timestamp: new Date().toISOString()
+      }))
     );
-    console.log("Conexión cerrada");
+    console.info(JSON.stringify({
+      event: "conexion_cerrada",
+      timestamp: new Date().toISOString()
+    }));
   }
 };

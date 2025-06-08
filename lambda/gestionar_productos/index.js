@@ -1,20 +1,35 @@
+// Logs en formato JSON para facilitar el análisis en index.js gestionar_productos
+
 const { Client } = require("pg");
 
 exports.handler = async (event) => {
-  console.log("📦 Evento recibido:", JSON.stringify(event));
+  console.info(JSON.stringify({
+    event: "evento_recibido",
+    body: event.body,
+    timestamp: new Date().toISOString()
+  }));
 
   let body;
   try {
     body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
   } catch (parseError) {
-    console.error("❌ Error parseando el body:", parseError);
+    console.error(JSON.stringify({
+      event: "error_parseo_body",
+      error: parseError.message,
+      timestamp: new Date().toISOString()
+    }));
     return buildResponse(400, { error: "Body inválido. Debe ser JSON." });
   }
 
   const { id, nombre, descripcion, cantidad, habilitado } = body;
 
-  // Validación mínima
   if (!id || !nombre || cantidad == null || habilitado == null) {
+    console.error(JSON.stringify({
+      event: "error_validacion",
+      error: "Faltan campos requeridos",
+      body,
+      timestamp: new Date().toISOString()
+    }));
     return buildResponse(400, {
       error: "Faltan campos requeridos: id, nombre, cantidad, habilitado"
     });
@@ -30,7 +45,11 @@ exports.handler = async (event) => {
 
   try {
     await client.connect();
-    console.log("✅ Conexión a la base de datos exitosa");
+    console.info(JSON.stringify({
+      event: "conexion_db",
+      status: "ok",
+      timestamp: new Date().toISOString()
+    }));
 
     const query = `
       INSERT INTO productos (id, nombre, descripcion, cantidad, habilitado)
@@ -44,7 +63,21 @@ exports.handler = async (event) => {
     const values = [id, nombre, descripcion, cantidad, habilitado];
 
     await client.query(query, values);
-    console.log("✅ Producto insertado/actualizado:", values);
+
+    // Log solicitado: producto creado
+    console.info(JSON.stringify({
+      event: "producto_creado",
+      mensaje: `El producto ${nombre} fue creado`,
+      nombre_producto: nombre,
+      timestamp: new Date().toISOString()
+    }));
+
+    console.info(JSON.stringify({
+      event: "producto_insertado_actualizado",
+      values,
+      habilitado,
+      timestamp: new Date().toISOString()
+    }));
 
     return buildResponse(200, {
       mensaje: habilitado
@@ -52,15 +85,27 @@ exports.handler = async (event) => {
         : `🛑 Producto ${nombre} deshabilitado en PostgreSQL`
     });
   } catch (err) {
-    console.error("❌ Error en la ejecución:", err);
+    console.error(JSON.stringify({
+      event: "error_ejecucion",
+      error: err.message,
+      stack: err.stack,
+      timestamp: new Date().toISOString()
+    }));
     return buildResponse(500, {
       error: "Error al guardar en PostgreSQL: " + err.message
     });
   } finally {
     await client.end().catch((e) =>
-      console.warn("⚠️ Error cerrando conexión:", e)
+      console.warn(JSON.stringify({
+        event: "error_cerrando_conexion",
+        error: e.message,
+        timestamp: new Date().toISOString()
+      }))
     );
-    console.log("🔌 Conexión cerrada");
+    console.info(JSON.stringify({
+      event: "conexion_cerrada",
+      timestamp: new Date().toISOString()
+    }));
   }
 };
 

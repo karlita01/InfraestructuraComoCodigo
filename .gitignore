@@ -16,3 +16,5 @@ terraform.tfstate.backup
 terraform.tfstate
 terraform/secret.tfvars
 *.zip
+secrets.tfvars
+*.auto.tfvars
