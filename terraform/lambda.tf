@@ -105,7 +105,7 @@ resource "null_resource" "invoke_init_db" {
   }
 
   provisioner "local-exec" {
-    command = "aws lambda invoke --function-name ${aws_lambda_function.init_db.function_name} --payload '{}' NUL"
+    command = "aws lambda invoke --function-name ${aws_lambda_function.init_db.function_name} --payload '{}' DBlog.txt"
   }
 }
 
