@@ -69,3 +69,20 @@ resource "aws_s3_bucket_policy" "allow_public_read" {
     ]
   })
 }
+
+resource "aws_s3_bucket" "frontend_backup" {
+  bucket         = "minimarket-frontend-charlie-backup"
+  force_destroy  = true
+}
+
+resource "aws_s3_bucket_website_configuration" "frontend_website_backup" {
+  bucket = aws_s3_bucket.frontend_backup.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+}
