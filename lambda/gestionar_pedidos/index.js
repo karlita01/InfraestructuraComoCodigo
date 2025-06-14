@@ -86,7 +86,6 @@ exports.handler = async (event) => {
         [p.cantidad, p.idproducto]
       );
 
-      // Log solicitado: producto descontado
       console.info(JSON.stringify({
         event: "producto_descontado",
         mensaje: `Se ha descontado ${p.cantidad} ${p.idproducto}`,

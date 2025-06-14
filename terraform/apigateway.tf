@@ -74,11 +74,12 @@ resource "aws_api_gateway_resource" "resource" {
 }
 
 resource "aws_api_gateway_method" "options" {
-  for_each     = local.resources
-  rest_api_id  = aws_api_gateway_rest_api.productos_api.id
-  resource_id  = aws_api_gateway_resource.resource[each.key].id
-  http_method  = "OPTIONS"
-  authorization = "NONE"
+  for_each             = local.resources
+  rest_api_id          = aws_api_gateway_rest_api.productos_api.id
+  resource_id          = aws_api_gateway_resource.resource[each.key].id
+  http_method          = "OPTIONS"
+  authorization        = "NONE"
+  request_validator_id = aws_api_gateway_request_validator.body_validator.id
 }
 
 resource "aws_api_gateway_integration" "options" {

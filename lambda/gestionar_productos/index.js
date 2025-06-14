@@ -64,7 +64,6 @@ exports.handler = async (event) => {
 
     await client.query(query, values);
 
-    // Log solicitado: producto creado
     console.info(JSON.stringify({
       event: "producto_creado",
       mensaje: `El producto ${nombre} fue creado`,
