@@ -189,6 +189,10 @@ resource "aws_lambda_permission" "api_gateway_permissions" {
 resource "aws_api_gateway_deployment" "deploy" {
   rest_api_id = aws_api_gateway_rest_api.productos_api.id
 
+  lifecycle {
+    create_before_destroy = true
+  }
+  
   depends_on = [
     aws_api_gateway_integration.lambda_integration,
     aws_api_gateway_integration_response.method,
