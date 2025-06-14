@@ -19,4 +19,5 @@ resource "aws_lambda_permission" "permitir_cloudwatch" {
 
 resource "aws_kms_key" "logs_key" {
   description = "KMS key for CloudWatch log group encryption"
+  enable_key_rotation = true
 }
