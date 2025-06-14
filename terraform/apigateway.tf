@@ -1,7 +1,11 @@
 resource "aws_api_gateway_rest_api" "productos_api" {
   name = "productos-api"
+
+    lifecycle {
+    create_before_destroy = true
+  }
 }
-// Sincronización de logs en API Gateway con CloudWatch
+
 resource "aws_api_gateway_account" "account" {
   cloudwatch_role_arn = aws_iam_role.apigateway_cloudwatch_role.arn
 }
