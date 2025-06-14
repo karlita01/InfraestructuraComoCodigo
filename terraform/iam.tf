@@ -71,7 +71,9 @@ resource "aws_iam_policy" "lambda_rds_access" {
           "rds:DescribeDBInstances",
           "rds-db:connect"
         ],
-        Resource = "*"
+        Resource = [
+          aws_db_instance.productos_db.arn
+        ]
       }
     ]
   })
