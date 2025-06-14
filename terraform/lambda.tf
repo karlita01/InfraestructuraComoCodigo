@@ -14,6 +14,8 @@ resource "aws_lambda_function" "generar_informes" {
   filename         = data.archive_file.lambda_generar_informes.output_path
   source_code_hash = data.archive_file.lambda_generar_informes.output_base64sha256
 
+  kms_key_arn = aws_kms_key.logs_key.arn
+
   code_signing_config_arn = aws_lambda_code_signing_config.default.arn
 
   vpc_config {
@@ -42,6 +44,8 @@ resource "aws_lambda_function" "gestionar_pedidos" {
   filename         = data.archive_file.lambda_gestionar_pedidos.output_path
   source_code_hash = data.archive_file.lambda_gestionar_pedidos.output_base64sha256
 
+  kms_key_arn = aws_kms_key.logs_key.arn
+
   code_signing_config_arn = aws_lambda_code_signing_config.default.arn
 
   vpc_config {
@@ -69,6 +73,8 @@ resource "aws_lambda_function" "init_db" {
   runtime          = "nodejs18.x"
   filename         = data.archive_file.lambda_init_db.output_path
   source_code_hash = data.archive_file.lambda_init_db.output_base64sha256
+
+  kms_key_arn = aws_kms_key.logs_key.arn
 
   code_signing_config_arn = aws_lambda_code_signing_config.default.arn
 
@@ -154,6 +160,8 @@ resource "aws_lambda_function" "guardar_producto" {
   filename         = data.archive_file.lambda_guardar_producto.output_path
   source_code_hash = data.archive_file.lambda_guardar_producto.output_base64sha256
   timeout          = 10
+
+  kms_key_arn = aws_kms_key.logs_key.arn
 
   code_signing_config_arn = aws_lambda_code_signing_config.default.arn
 
