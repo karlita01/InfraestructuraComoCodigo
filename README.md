@@ -73,16 +73,20 @@ Para eliminar todos los recursos creados, sigue estos pasos:
    Ejecuta el siguiente comando para destruir únicamente las funciones Lambda:
 
    ```bash
-    terraform destroy `
-    "-target=aws_lambda_function.init_db" `
-    "-target=aws_lambda_function.guardar_producto" `
-    "-target=aws_lambda_function.gestionar_pedidos" `
-    "-target=aws_lambda_function.generar_informes"
+      terraform destroy `
+      "-target=aws_lambda_function.init_db" `
+      "-target=aws_lambda_function.guardar_producto" `
+      "-target=aws_lambda_function.gestionar_pedidos" `
+      "-target=aws_lambda_function.generar_informes" `
+      "-target=aws_db_instance.productos_db" `
+      -auto-approve
 
     Y luego:
 
    terraform destroy
 ---
+
+debemos crear un archivo llamado secrets.auto.tfvars para hacer de que se cree efectivamente la base de datos
 
 ## 🗄️ Base de Datos
 

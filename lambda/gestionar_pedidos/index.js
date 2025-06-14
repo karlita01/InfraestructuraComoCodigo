@@ -1,13 +1,22 @@
+// Logs en formato JSON para facilitar el análisis en index.js gestionar_pedidos
 const { Client } = require("pg");
 
 exports.handler = async (event) => {
-  console.log("Lambda gestionar_pedidos invocada");
+  console.info(JSON.stringify({
+    event: "evento_recibido",
+    body: event.body,
+    timestamp: new Date().toISOString()
+  }));
 
   let body;
   try {
     body = typeof event.body === "string" ? JSON.parse(event.body) : event.body;
   } catch (err) {
-    console.error("❌ Error al parsear body:", err);
+    console.error(JSON.stringify({
+      event: "error_parseo_body",
+      error: err.message,
+      timestamp: new Date().toISOString()
+    }));
     return buildResponse(400, { error: "JSON inválido en el body" });
   }
 
@@ -23,6 +32,11 @@ exports.handler = async (event) => {
 
   try {
     await client.connect();
+    console.info(JSON.stringify({
+      event: "conexion_db",
+      status: "ok",
+      timestamp: new Date().toISOString()
+    }));
 
     for (const p of productos) {
       const res = await client.query(
@@ -31,6 +45,23 @@ exports.handler = async (event) => {
       );
 
       if (res.rows.length === 0 || !res.rows[0].habilitado || res.rows[0].cantidad < p.cantidad) {
+        if (res.rows[0]?.cantidad === 0) {
+          console.warn(JSON.stringify({
+            event: "producto_sin_stock",
+            producto: p.idproducto,
+            mensaje: `El producto ${p.idproducto} se quedó sin stock. Enviando alerta`,
+            timestamp: new Date().toISOString()
+          }));
+        } else {
+          console.warn(JSON.stringify({
+            event: "producto_no_disponible",
+            producto: p.idproducto,
+            cantidad_solicitada: p.cantidad,
+            cantidad_disponible: res.rows[0]?.cantidad,
+            habilitado: res.rows[0]?.habilitado,
+            timestamp: new Date().toISOString()
+          }));
+        }
         return buildResponse(400, {
           error: `Producto ${p.idproducto} no disponible o stock insuficiente`
         });
@@ -54,15 +85,36 @@ exports.handler = async (event) => {
         "UPDATE productos SET cantidad = cantidad - $1 WHERE id = $2",
         [p.cantidad, p.idproducto]
       );
+
+      // Log solicitado: producto descontado
+      console.info(JSON.stringify({
+        event: "producto_descontado",
+        mensaje: `Se ha descontado ${p.cantidad} ${p.idproducto}`,
+        idproducto: p.idproducto,
+        cantidad: p.cantidad,
+        timestamp: new Date().toISOString()
+      }));
     }
 
     await client.query("COMMIT");
+
+    console.info(JSON.stringify({
+      event: "pedido_registrado",
+      idpedido,
+      productos,
+      timestamp: new Date().toISOString()
+    }));
 
     return buildResponse(200, {
       mensaje: "🛒 Pedido registrado correctamente"
     });
   } catch (error) {
-    console.error("❌ Error al procesar el pedido:", error);
+    console.error(JSON.stringify({
+      event: "error_procesar_pedido",
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    }));
 
     await client.query("ROLLBACK");
 
@@ -71,8 +123,16 @@ exports.handler = async (event) => {
     });
   } finally {
     await client.end().catch(err =>
-      console.warn("⚠️ Error cerrando la conexión:", err)
+      console.warn(JSON.stringify({
+        event: "error_cerrando_conexion",
+        error: err.message,
+        timestamp: new Date().toISOString()
+      }))
     );
+    console.info(JSON.stringify({
+      event: "conexion_cerrada",
+      timestamp: new Date().toISOString()
+    }));
   }
 };
 
