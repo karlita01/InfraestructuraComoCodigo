@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
-<testsuites disabled="0" errors="0" failures="70" tests="172" time="0.0">
-	<testsuite disabled="0" errors="0" failures="70" name="terraform scan" skipped="0" tests="172" time="0">
+<testsuites disabled="0" errors="0" failures="69" tests="172" time="0.0">
+	<testsuite disabled="0" errors="0" failures="69" name="terraform scan" skipped="0" tests="172" time="0">
 		<properties>
 			<property name="directory" value="['./terraform']"/>
 			<property name="add_check" value="False"/>
@@ -42,6 +42,7 @@
 		<testcase name="[NONE][CKV_AWS_66] Ensure that CloudWatch Log Group specifies retention days" classname="\apigateway.tf.aws_cloudwatch_log_group.api_gateway_logs" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV_AWS_76] Ensure API Gateway has Access Logging enabled" classname="\apigateway.tf.aws_api_gateway_stage.prod" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV_AWS_59] Ensure there is no open access to back-end resources through API" classname="\apigateway.tf.aws_api_gateway_method.options[&quot;informes&quot;]" file="\apigateway.tf"/>
+		<testcase name="[NONE][CKV_AWS_59] Ensure there is no open access to back-end resources through API" classname="\apigateway.tf.aws_api_gateway_method.method" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV2_AWS_70] Ensure API gateway method has authorization or API key set" classname="\apigateway.tf.aws_api_gateway_method.method" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV_AWS_301] Ensure that AWS Lambda function is not publicly accessible" classname="\apigateway.tf.aws_lambda_permission.api_gateway_permissions[&quot;informes&quot;]" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV_AWS_364] Ensure that AWS Lambda function permissions delegated to AWS services are limited by SourceArn or SourceAccount" classname="\apigateway.tf.aws_lambda_permission.api_gateway_permissions[&quot;informes&quot;]" file="\apigateway.tf"/>
@@ -115,6 +116,7 @@
 		<testcase name="[NONE][CKV_AWS_130] Ensure VPC subnets do not assign public IP by default" classname="\vpc.tf.aws_subnet.secondary" file="\vpc.tf"/>
 		<testcase name="[NONE][CKV2_AWS_77] Ensure AWS API Gateway Rest API attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability" classname="\apigateway.tf.aws_api_gateway_stage.prod" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV2_AWS_35] AWS NAT Gateways should be utilized for the default route" classname="\vpc.tf.aws_route_table.public_rt" file="\vpc.tf"/>
+		<testcase name="[NONE][CKV2_AWS_54] Ensure AWS CloudFront distribution is using secure SSL protocols for HTTPS communication" classname="\cloudfront.tf.aws_cloudfront_distribution.frontend_cdn" file="\cloudfront.tf"/>
 		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="\iam.tf.aws_iam_role.apigateway_cloudwatch_role" file="\iam.tf"/>
 		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="\iam.tf.aws_iam_role_policy_attachment.apigateway_cloudwatch_logs_policy" file="\iam.tf"/>
 		<testcase name="[NONE][CKV2_AWS_56] Ensure AWS Managed IAMFullAccess IAM policy is not used." classname="\iam.tf.aws_iam_role.lambda_rds_role" file="\iam.tf"/>
@@ -127,18 +129,17 @@
 		<testcase name="[NONE][CKV2_AWS_75] Ensure no open CORS policy" classname="\lambda.tf.aws_lambda_function.init_db" file="\lambda.tf"/>
 		<testcase name="[NONE][CKV2_AWS_75] Ensure no open CORS policy" classname="\lambda.tf.aws_lambda_function.guardar_producto" file="\lambda.tf"/>
 		<testcase name="[NONE][CKV2_AWS_69] Ensure AWS RDS database instance configured with encryption in transit" classname="\rds.tf.aws_db_instance.productos_db" file="\rds.tf"/>
-		<testcase name="[NONE][CKV2_AWS_54] Ensure AWS CloudFront distribution is using secure SSL protocols for HTTPS communication" classname="\cloudfront.tf.aws_cloudfront_distribution.frontend_cdn" file="\cloudfront.tf"/>
+		<testcase name="[NONE][CKV_AWS_57] S3 Bucket has an ACL defined which allows public WRITE access." classname="\s3.tf.aws_s3_bucket.frontend" file="\s3.tf"/>
 		<testcase name="[NONE][CKV2_AWS_5] Ensure that Security Groups are attached to another resource" classname="\rds.tf.aws_security_group.rds_sg" file="\rds.tf"/>
 		<testcase name="[NONE][CKV2_AWS_5] Ensure that Security Groups are attached to another resource" classname="\lambda.tf.aws_security_group.lambda_sg" file="\lambda.tf"/>
 		<testcase name="[NONE][CKV2_AWS_44] Ensure AWS route table with VPC peering does not contain routes overly permissive to all traffic" classname="\vpc.tf.aws_route_table.public_rt" file="\vpc.tf"/>
 		<testcase name="[NONE][CKV_AWS_20] S3 Bucket has an ACL defined which allows public READ access." classname="\s3.tf.aws_s3_bucket.frontend" file="\s3.tf"/>
-		<testcase name="[NONE][CKV_AWS_57] S3 Bucket has an ACL defined which allows public WRITE access." classname="\s3.tf.aws_s3_bucket.frontend" file="\s3.tf"/>
-		<testcase name="[NONE][CKV2_AWS_40] Ensure AWS IAM policy does not allow full IAM privileges" classname="\iam.tf.aws_iam_policy.lambda_rds_access" file="\iam.tf"/>
 		<testcase name="[NONE][CKV2_AWS_46] Ensure AWS CloudFront Distribution with S3 have Origin Access set to enabled" classname="\cloudfront.tf.aws_cloudfront_distribution.frontend_cdn" file="\cloudfront.tf"/>
+		<testcase name="[NONE][CKV_AWS_19] Ensure all data stored in the S3 bucket is securely encrypted at rest" classname="\s3.tf.aws_s3_bucket.frontend" file="\s3.tf"/>
 		<testcase name="[NONE][CKV2_AWS_53] Ensure AWS API gateway request is validated" classname="\apigateway.tf.aws_api_gateway_method.options[&quot;informes&quot;]" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV2_AWS_53] Ensure AWS API gateway request is validated" classname="\apigateway.tf.aws_api_gateway_method.options[&quot;pedidos&quot;]" file="\apigateway.tf"/>
 		<testcase name="[NONE][CKV2_AWS_53] Ensure AWS API gateway request is validated" classname="\apigateway.tf.aws_api_gateway_method.options[&quot;productos&quot;]" file="\apigateway.tf"/>
-		<testcase name="[NONE][CKV_AWS_19] Ensure all data stored in the S3 bucket is securely encrypted at rest" classname="\s3.tf.aws_s3_bucket.frontend" file="\s3.tf"/>
+		<testcase name="[NONE][CKV2_AWS_40] Ensure AWS IAM policy does not allow full IAM privileges" classname="\iam.tf.aws_iam_policy.lambda_rds_access" file="\iam.tf"/>
 		<testcase name="[NONE][CKV_AWS_338] Ensure CloudWatch log groups retains logs for at least 1 year" classname="\apigateway.tf.aws_cloudwatch_log_group.api_gateway_logs" file="\apigateway.tf">
 			<failure type="failure" message="Ensure CloudWatch log groups retains logs for at least 1 year">
 Resource: aws_cloudwatch_log_group.api_gateway_logs
@@ -210,37 +211,22 @@ Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aw
 		39 | }
 </failure>
 		</testcase>
-		<testcase name="[NONE][CKV_AWS_59] Ensure there is no open access to back-end resources through API" classname="\apigateway.tf.aws_api_gateway_method.method" file="\apigateway.tf">
-			<failure type="failure" message="Ensure there is no open access to back-end resources through API">
-Resource: aws_api_gateway_method.method
-File: \apigateway.tf: 128-134
-Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/public-policies/public-6-api-gateway-authorizer-set
-
-		128 | resource &quot;aws_api_gateway_method&quot; &quot;method&quot; {
-		129 |   for_each    = { for k, v in local.resources : k =&gt; v if length(v.methods) &gt; 0 }
-		130 |   rest_api_id = aws_api_gateway_rest_api.productos_api.id
-		131 |   resource_id = aws_api_gateway_resource.resource[each.key].id
-		132 |   http_method = each.value.methods[0]
-		133 |   authorization = &quot;NONE&quot;
-		134 | }
-</failure>
-		</testcase>
 		<testcase name="[NONE][CKV_AWS_217] Ensure Create before destroy for API deployments" classname="\apigateway.tf.aws_api_gateway_deployment.deploy" file="\apigateway.tf">
 			<failure type="failure" message="Ensure Create before destroy for API deployments">
 Resource: aws_api_gateway_deployment.deploy
-File: \apigateway.tf: 178-187
+File: \apigateway.tf: 189-198
 Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-aws-api-deployments-enable-create-before-destroy
 
-		178 | resource &quot;aws_api_gateway_deployment&quot; &quot;deploy&quot; {
-		179 |   rest_api_id = aws_api_gateway_rest_api.productos_api.id
-		180 | 
-		181 |   depends_on = [
-		182 |     aws_api_gateway_integration.lambda_integration,
-		183 |     aws_api_gateway_integration_response.method,
-		184 |     aws_api_gateway_integration.options,
-		185 |     aws_api_gateway_integration_response.options
-		186 |   ]
-		187 | }</failure>
+		189 | resource &quot;aws_api_gateway_deployment&quot; &quot;deploy&quot; {
+		190 |   rest_api_id = aws_api_gateway_rest_api.productos_api.id
+		191 | 
+		192 |   depends_on = [
+		193 |     aws_api_gateway_integration.lambda_integration,
+		194 |     aws_api_gateway_integration_response.method,
+		195 |     aws_api_gateway_integration.options,
+		196 |     aws_api_gateway_integration_response.options
+		197 |   ]
+		198 | }</failure>
 		</testcase>
 		<testcase name="[NONE][CKV_AWS_86] Ensure CloudFront distribution has Access Logging enabled" classname="\cloudfront.tf.aws_cloudfront_distribution.frontend_cdn" file="\cloudfront.tf">
 			<failure type="failure" message="Ensure CloudFront distribution has Access Logging enabled">
@@ -1466,6 +1452,35 @@ Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aw
 		71 | }
 </failure>
 		</testcase>
+		<testcase name="[NONE][CKV2_AWS_51] Ensure AWS API Gateway endpoints uses client certificate authentication" classname="\apigateway.tf.aws_api_gateway_stage.prod" file="\apigateway.tf">
+			<failure type="failure" message="Ensure AWS API Gateway endpoints uses client certificate authentication">
+Resource: aws_api_gateway_stage.prod
+File: \apigateway.tf: 19-39
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-51
+
+		19 | resource &quot;aws_api_gateway_stage&quot; &quot;prod&quot; {
+		20 |   deployment_id = aws_api_gateway_deployment.deploy.id
+		21 |   rest_api_id   = aws_api_gateway_rest_api.productos_api.id
+		22 |   stage_name    = &quot;prod&quot;
+		23 | 
+		24 |   access_log_settings {
+		25 |     destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
+		26 |     format = jsonencode({
+		27 |       requestId      = &quot;$context.requestId&quot;
+		28 |       ip             = &quot;$context.identity.sourceIp&quot;
+		29 |       caller         = &quot;$context.identity.caller&quot;
+		30 |       user           = &quot;$context.identity.user&quot;
+		31 |       requestTime    = &quot;$context.requestTime&quot;
+		32 |       httpMethod     = &quot;$context.httpMethod&quot;
+		33 |       resourcePath   = &quot;$context.resourcePath&quot;
+		34 |       status         = &quot;$context.status&quot;
+		35 |       protocol       = &quot;$context.protocol&quot;
+		36 |       responseLength = &quot;$context.responseLength&quot;
+		37 |     })
+		38 |   }
+		39 | }
+</failure>
+		</testcase>
 		<testcase name="[NONE][CKV2_AWS_4] Ensure API Gateway stage have logging level defined as appropriate" classname="\apigateway.tf.aws_api_gateway_stage.prod" file="\apigateway.tf">
 			<failure type="failure" message="Ensure API Gateway stage have logging level defined as appropriate">
 Resource: aws_api_gateway_stage.prod
@@ -1697,45 +1712,6 @@ Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aw
 		21 | }
 </failure>
 		</testcase>
-		<testcase name="[NONE][CKV2_AWS_51] Ensure AWS API Gateway endpoints uses client certificate authentication" classname="\apigateway.tf.aws_api_gateway_stage.prod" file="\apigateway.tf">
-			<failure type="failure" message="Ensure AWS API Gateway endpoints uses client certificate authentication">
-Resource: aws_api_gateway_stage.prod
-File: \apigateway.tf: 19-39
-Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-51
-
-		19 | resource &quot;aws_api_gateway_stage&quot; &quot;prod&quot; {
-		20 |   deployment_id = aws_api_gateway_deployment.deploy.id
-		21 |   rest_api_id   = aws_api_gateway_rest_api.productos_api.id
-		22 |   stage_name    = &quot;prod&quot;
-		23 | 
-		24 |   access_log_settings {
-		25 |     destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
-		26 |     format = jsonencode({
-		27 |       requestId      = &quot;$context.requestId&quot;
-		28 |       ip             = &quot;$context.identity.sourceIp&quot;
-		29 |       caller         = &quot;$context.identity.caller&quot;
-		30 |       user           = &quot;$context.identity.user&quot;
-		31 |       requestTime    = &quot;$context.requestTime&quot;
-		32 |       httpMethod     = &quot;$context.httpMethod&quot;
-		33 |       resourcePath   = &quot;$context.resourcePath&quot;
-		34 |       status         = &quot;$context.status&quot;
-		35 |       protocol       = &quot;$context.protocol&quot;
-		36 |       responseLength = &quot;$context.responseLength&quot;
-		37 |     })
-		38 |   }
-		39 | }
-</failure>
-		</testcase>
-		<testcase name="[NONE][CKV2_AWS_64] Ensure KMS key Policy is defined" classname="\cloudwatch_trigger.tf.aws_kms_key.logs_key" file="\cloudwatch_trigger.tf">
-			<failure type="failure" message="Ensure KMS key Policy is defined">
-Resource: aws_kms_key.logs_key
-File: \cloudwatch_trigger.tf: 20-22
-Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-2-64
-
-		20 | resource &quot;aws_kms_key&quot; &quot;logs_key&quot; {
-		21 |   description = &quot;KMS key for CloudWatch log group encryption&quot;
-		22 | }</failure>
-		</testcase>
 		<testcase name="[NONE][CKV2_AWS_62] Ensure S3 buckets should have event notifications enabled" classname="\s3.tf.aws_s3_bucket.frontend" file="\s3.tf">
 			<failure type="failure" message="Ensure S3 buckets should have event notifications enabled">
 Resource: aws_s3_bucket.frontend
@@ -1806,6 +1782,16 @@ Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aw
 		32 | }
 </failure>
 		</testcase>
+		<testcase name="[NONE][CKV2_AWS_64] Ensure KMS key Policy is defined" classname="\cloudwatch_trigger.tf.aws_kms_key.logs_key" file="\cloudwatch_trigger.tf">
+			<failure type="failure" message="Ensure KMS key Policy is defined">
+Resource: aws_kms_key.logs_key
+File: \cloudwatch_trigger.tf: 20-22
+Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-2-64
+
+		20 | resource &quot;aws_kms_key&quot; &quot;logs_key&quot; {
+		21 |   description = &quot;KMS key for CloudWatch log group encryption&quot;
+		22 | }</failure>
+		</testcase>
 		<testcase name="[NONE][CKV2_AWS_29] Ensure public API gateway are protected by WAF" classname="\apigateway.tf.aws_api_gateway_stage.prod" file="\apigateway.tf">
 			<failure type="failure" message="Ensure public API gateway are protected by WAF">
 Resource: aws_api_gateway_stage.prod
@@ -1874,7 +1860,7 @@ Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aw
 		<testcase name="[NONE][CKV2_AWS_53] Ensure AWS API gateway request is validated" classname="\apigateway.tf.aws_api_gateway_method.method" file="\apigateway.tf">
 			<failure type="failure" message="Ensure AWS API gateway request is validated">
 Resource: aws_api_gateway_method.method
-File: \apigateway.tf: 128-134
+File: \apigateway.tf: 128-135
 Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-53
 
 		128 | resource &quot;aws_api_gateway_method&quot; &quot;method&quot; {
@@ -1882,8 +1868,9 @@ Guideline: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aw
 		130 |   rest_api_id = aws_api_gateway_rest_api.productos_api.id
 		131 |   resource_id = aws_api_gateway_resource.resource[each.key].id
 		132 |   http_method = each.value.methods[0]
-		133 |   authorization = &quot;NONE&quot;
-		134 | }
+		133 |   authorization = &quot;COGNITO_USER_POOLS&quot;
+		134 |   authorizer_id = aws_api_gateway_authorizer.cognito_authorizer.id
+		135 | }
 </failure>
 		</testcase>
 	</testsuite>

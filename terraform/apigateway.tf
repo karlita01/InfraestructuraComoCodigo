@@ -130,7 +130,18 @@ resource "aws_api_gateway_method" "method" {
   rest_api_id = aws_api_gateway_rest_api.productos_api.id
   resource_id = aws_api_gateway_resource.resource[each.key].id
   http_method = each.value.methods[0]
-  authorization = "NONE"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito_authorizer.id
+}
+
+resource "aws_api_gateway_authorizer" "cognito_authorizer" {
+  name                    = "cognito-authorizer"
+  rest_api_id             = aws_api_gateway_rest_api.productos_api.id
+  authorizer_uri          = ""
+  authorizer_result_ttl_in_seconds = 300
+  identity_source         = "method.request.header.Authorization"
+  type                    = "COGNITO_USER_POOLS"
+  provider_arns           = [aws_cognito_user_pool.user_pool.arn]
 }
 
 resource "aws_api_gateway_integration" "lambda_integration" {
