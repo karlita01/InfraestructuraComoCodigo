@@ -14,6 +14,8 @@ resource "aws_lambda_function" "generar_informes" {
   filename         = data.archive_file.lambda_generar_informes.output_path
   source_code_hash = data.archive_file.lambda_generar_informes.output_base64sha256
 
+  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
+
   vpc_config {
   subnet_ids         = local.lambda_config.vpc.subnet_ids
   security_group_ids = local.lambda_config.vpc.security_group_ids
@@ -40,6 +42,8 @@ resource "aws_lambda_function" "gestionar_pedidos" {
   filename         = data.archive_file.lambda_gestionar_pedidos.output_path
   source_code_hash = data.archive_file.lambda_gestionar_pedidos.output_base64sha256
 
+  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
+
   vpc_config {
   subnet_ids         = local.lambda_config.vpc.subnet_ids
   security_group_ids = local.lambda_config.vpc.security_group_ids
@@ -65,6 +69,8 @@ resource "aws_lambda_function" "init_db" {
   runtime          = "nodejs18.x"
   filename         = data.archive_file.lambda_init_db.output_path
   source_code_hash = data.archive_file.lambda_init_db.output_base64sha256
+
+  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
 
   vpc_config {
   subnet_ids         = local.lambda_config.vpc.subnet_ids
@@ -149,6 +155,8 @@ resource "aws_lambda_function" "guardar_producto" {
   source_code_hash = data.archive_file.lambda_guardar_producto.output_base64sha256
   timeout          = 10
 
+  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
+
   vpc_config {
   subnet_ids         = local.lambda_config.vpc.subnet_ids
   security_group_ids = local.lambda_config.vpc.security_group_ids
@@ -156,5 +164,22 @@ resource "aws_lambda_function" "guardar_producto" {
 
   environment {
     variables = local.lambda_config.environment
+  }
+}
+
+#firma code:
+
+resource "aws_signer_signing_profile" "lambda_signing_profile" {
+  platform_id = "AWSLambda-SHA384-ECDSA"
+}
+
+resource "aws_lambda_code_signing_config" "default" {
+  allowed_publishers {
+    signing_profile_version_arns = [
+      aws_signer_signing_profile.lambda_signing_profile.version_arn
+    ]
+  }
+  policies {
+    untrusted_artifact_on_deployment = "Enforce"
   }
 }
