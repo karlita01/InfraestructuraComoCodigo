@@ -16,3 +16,7 @@ resource "aws_lambda_permission" "permitir_cloudwatch" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.cada_minuto.arn
 }
+
+resource "aws_kms_key" "logs_key" {
+  description = "KMS key for CloudWatch log group encryption"
+}

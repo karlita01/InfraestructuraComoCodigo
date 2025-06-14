@@ -18,3 +18,4 @@ terraform/secret.tfvars
 *.zip
 secrets.tfvars
 *.auto.tfvars
+results.xml/

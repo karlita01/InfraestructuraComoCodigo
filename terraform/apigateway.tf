@@ -13,6 +13,7 @@ resource "aws_api_gateway_account" "account" {
 resource "aws_cloudwatch_log_group" "api_gateway_logs" {
   name              = "/aws/api-gateway/productos-api"
   retention_in_days = 7
+  kms_key_id        = aws_kms_key.logs_key.arn
 }
 
 resource "aws_api_gateway_stage" "prod" {
@@ -80,6 +81,13 @@ resource "aws_api_gateway_method" "options" {
   http_method          = "OPTIONS"
   authorization        = "NONE"
   request_validator_id = aws_api_gateway_request_validator.body_validator.id
+}
+
+resource "aws_api_gateway_request_validator" "body_validator" {
+  rest_api_id = aws_api_gateway_rest_api.productos_api.id
+  name        = "body-validator"
+  validate_request_body = false
+  validate_request_parameters = false
 }
 
 resource "aws_api_gateway_integration" "options" {
