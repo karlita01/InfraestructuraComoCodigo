@@ -17,6 +17,8 @@ resource "aws_db_instance" "productos_db" {
 
   monitoring_interval = 60
 
+  copy_tags_to_snapshot = true
+
   multi_az = true
 
   performance_insights_enabled          = true
