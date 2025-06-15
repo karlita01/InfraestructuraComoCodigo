@@ -11,6 +11,8 @@ resource "aws_db_instance" "productos_db" {
   publicly_accessible  = local.rds_config.publicly_accessible
   skip_final_snapshot  = local.rds_config.skip_final_snapshot
 
+  deletion_protection = false
+
   auto_minor_version_upgrade = true
 
   monitoring_interval = 60
