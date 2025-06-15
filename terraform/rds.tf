@@ -15,6 +15,8 @@ resource "aws_db_instance" "productos_db" {
 
   monitoring_interval = 60
 
+  multi_az = true
+
   performance_insights_enabled = true
   performance_insights_retention_period = 7
 
