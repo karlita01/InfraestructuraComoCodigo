@@ -1,15 +1,15 @@
 resource "aws_db_instance" "productos_db" {
-  allocated_storage    = local.rds_config.allocated_storage
+  allocated_storage     = local.rds_config.allocated_storage
   max_allocated_storage = local.rds_config.max_allocated_storage
-  engine               = local.rds_config.engine
-  engine_version       = local.rds_config.engine_version
-  instance_class       = local.rds_config.instance_class
-  db_name              = local.rds_config.db_name
-  username             = local.rds_config.username
-  password             = local.rds_config.password
-  parameter_group_name = local.rds_config.parameter_group_name
-  publicly_accessible  = local.rds_config.publicly_accessible
-  skip_final_snapshot  = local.rds_config.skip_final_snapshot
+  engine                = local.rds_config.engine
+  engine_version        = local.rds_config.engine_version
+  instance_class        = local.rds_config.instance_class
+  db_name               = local.rds_config.db_name
+  username              = local.rds_config.username
+  password              = local.rds_config.password
+  parameter_group_name  = local.rds_config.parameter_group_name
+  publicly_accessible   = local.rds_config.publicly_accessible
+  skip_final_snapshot   = local.rds_config.skip_final_snapshot
 
   deletion_protection = false
 
@@ -19,8 +19,10 @@ resource "aws_db_instance" "productos_db" {
 
   multi_az = true
 
-  performance_insights_enabled = true
+  performance_insights_enabled          = true
   performance_insights_retention_period = 7
+
+  performance_insights_kms_key_id = aws_kms_key.logs_key.arn
 
   storage_encrypted = true
 
