@@ -31,11 +31,27 @@ resource "aws_s3_bucket" "frontend" {
   force_destroy  = true
 }
 
+resource "aws_kms_key" "frontend_key" {
+  description         = "KMS key for S3 frontend encryption"
+  enable_key_rotation = true
+}
+
 resource "aws_s3_bucket_versioning" "frontend_versioning" {
   bucket = aws_s3_bucket.frontend.id
 
   versioning_configuration {
     status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "frontend_sse" {
+  bucket = aws_s3_bucket.frontend.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.frontend_key.arn
+    }
   }
 }
 
