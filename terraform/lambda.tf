@@ -44,6 +44,8 @@ resource "aws_lambda_function" "gestionar_pedidos" {
   filename         = data.archive_file.lambda_gestionar_pedidos.output_path
   source_code_hash = data.archive_file.lambda_gestionar_pedidos.output_base64sha256
 
+  reserved_concurrent_executions = 25
+
   kms_key_arn = aws_kms_key.logs_key.arn
 
   code_signing_config_arn = aws_lambda_code_signing_config.default.arn
