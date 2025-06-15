@@ -58,3 +58,13 @@ resource "aws_security_group" "rds_sg" {
   description = "Permite salida solo dentro de la VPC"
   }
 }
+
+resource "aws_db_parameter_group" "postgresql_logs" {
+  name   = "postgresql-logs"
+  family = "postgres14"
+
+  parameter {
+    name  = "log_statement"
+    value = "all"
+  }
+}
