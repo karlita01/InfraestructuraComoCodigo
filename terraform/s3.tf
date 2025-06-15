@@ -84,11 +84,27 @@ resource "aws_s3_bucket" "frontend_backup" {
   force_destroy  = true
 }
 
+resource "aws_kms_key" "frontend_backup_key" {
+  description         = "KMS key for S3 frontend backup encryption"
+  enable_key_rotation = true
+}
+
 resource "aws_s3_bucket_versioning" "frontend_backup_versioning" {
   bucket = aws_s3_bucket.frontend_backup.id
 
   versioning_configuration {
     status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "frontend_backup_sse" {
+  bucket = aws_s3_bucket.frontend_backup.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.frontend_backup_key.arn
+    }
   }
 }
 
