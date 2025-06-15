@@ -42,6 +42,7 @@ resource "aws_cloudfront_distribution" "frontend_cdn" {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "origin-group-1"
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.default_security.id
     forwarded_values {
       query_string = false
       cookies {
@@ -61,5 +62,34 @@ resource "aws_cloudfront_distribution" "frontend_cdn" {
     acm_certificate_arn            = "arn:aws:acm:us-east-2:612526786257:certificate/afaa74a6-8f1d-44f1-b7c4-65c4b55afacd"
     ssl_support_method             = "sni-only"
     minimum_protocol_version       = "TLSv1.2_2021"
+  }
+}
+
+resource "aws_cloudfront_response_headers_policy" "default_security" {
+  name = "default-security-policy"
+
+  security_headers_config {
+    xss_protection {
+      override = true
+      protection = true
+      mode_block = true
+    }
+    frame_options {
+      override = true
+      frame_option = "DENY"
+    }
+    referrer_policy {
+      override = true
+      referrer_policy = "no-referrer"
+    }
+    content_type_options {
+      override = true
+    }
+    strict_transport_security {
+      override = true
+      include_subdomains = true
+      preload = true
+      access_control_max_age_sec = 63072000
+    }
   }
 }
