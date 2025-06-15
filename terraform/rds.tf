@@ -13,6 +13,8 @@ resource "aws_db_instance" "productos_db" {
 
   auto_minor_version_upgrade = true
 
+  storage_encrypted = true
+
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade", "error", "general", "slowquery"]
 
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
