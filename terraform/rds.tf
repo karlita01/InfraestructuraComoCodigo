@@ -15,6 +15,9 @@ resource "aws_db_instance" "productos_db" {
 
   monitoring_interval = 60
 
+  performance_insights_enabled = true
+  performance_insights_retention_period = 7
+
   storage_encrypted = true
 
   enabled_cloudwatch_logs_exports = ["postgresql", "upgrade", "error", "general", "slowquery"]
