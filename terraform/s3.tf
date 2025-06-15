@@ -39,6 +39,7 @@ resource "aws_s3_bucket_versioning" "frontend_versioning" {
   }
 }
 
+
 resource "aws_s3_bucket_public_access_block" "frontend_block" {
   bucket                  = aws_s3_bucket.frontend.id
   block_public_acls       = false
