@@ -31,6 +31,14 @@ resource "aws_s3_bucket" "frontend" {
   force_destroy  = true
 }
 
+resource "aws_s3_bucket_versioning" "frontend_versioning" {
+  bucket = aws_s3_bucket.frontend.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "frontend_block" {
   bucket                  = aws_s3_bucket.frontend.id
   block_public_acls       = false
@@ -73,6 +81,14 @@ resource "aws_s3_bucket_policy" "allow_public_read" {
 resource "aws_s3_bucket" "frontend_backup" {
   bucket         = "minimarket-frontend-charlie-backup"
   force_destroy  = true
+}
+
+resource "aws_s3_bucket_versioning" "frontend_backup_versioning" {
+  bucket = aws_s3_bucket.frontend_backup.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 resource "aws_s3_bucket_website_configuration" "frontend_website_backup" {
