@@ -145,6 +145,7 @@ resource "aws_security_group_rule" "allow_lambda_access_rds" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds_sg.id
   source_security_group_id = aws_security_group.lambda_sg.id
+  description              = "Permite a Lambda acceder a RDS en el puerto 5432"
 }
 
 # guardar producto lambda function
