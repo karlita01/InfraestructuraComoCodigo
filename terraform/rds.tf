@@ -11,6 +11,8 @@ resource "aws_db_instance" "productos_db" {
   publicly_accessible  = local.rds_config.publicly_accessible
   skip_final_snapshot  = local.rds_config.skip_final_snapshot
 
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade", "error", "general", "slowquery"]
+
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
 
