@@ -17,6 +17,8 @@ resource "aws_lambda_permission" "permitir_cloudwatch" {
   source_arn    = aws_cloudwatch_event_rule.cada_minuto.arn
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_kms_key" "logs_key" {
   description         = "KMS key for CloudWatch log group encryption"
   enable_key_rotation = true
@@ -26,18 +28,28 @@ resource "aws_kms_key" "logs_key" {
     Id      = "key-default-1",
     Statement = [
       {
-        Sid       = "Allow account to use the key"
+        Sid       = "AllowRootAccountAccess"
         Effect    = "Allow"
         Principal = {
           AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         }
-        Action    = [
-          "kms:*"
-        ]
+        Action    = "kms:*"
         Resource  = "*"
+      },
+      {
+        Sid      = "AllowCloudWatchLogsUsage"
+        Effect   = "Allow"
+        Principal = {
+          Service = "logs.us-east-1.amazonaws.com"
+        }
+        Action   = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ]
+        Resource = "*"
       }
     ]
   })
 }
-
-data "aws_caller_identity" "current" {}

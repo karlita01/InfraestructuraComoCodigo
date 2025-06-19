@@ -1,4 +1,4 @@
-# Lambda function to generar informes
+# Lambda: generar_informes
 
 data "archive_file" "lambda_generar_informes" {
   type        = "zip"
@@ -16,11 +16,9 @@ resource "aws_lambda_function" "generar_informes" {
 
   kms_key_arn = aws_kms_key.logs_key.arn
 
-  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
-
   vpc_config {
-  subnet_ids         = local.lambda_config.vpc.subnet_ids
-  security_group_ids = local.lambda_config.vpc.security_group_ids
+    subnet_ids         = local.lambda_config.vpc.subnet_ids
+    security_group_ids = local.lambda_config.vpc.security_group_ids
   }
 
   environment {
@@ -28,7 +26,7 @@ resource "aws_lambda_function" "generar_informes" {
   }
 }
 
-# Lambda function to gestionar pedidos
+# Lambda: gestionar_pedidos
 
 data "archive_file" "lambda_gestionar_pedidos" {
   type        = "zip"
@@ -44,15 +42,11 @@ resource "aws_lambda_function" "gestionar_pedidos" {
   filename         = data.archive_file.lambda_gestionar_pedidos.output_path
   source_code_hash = data.archive_file.lambda_gestionar_pedidos.output_base64sha256
 
-  reserved_concurrent_executions = 25
-
   kms_key_arn = aws_kms_key.logs_key.arn
 
-  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
-
   vpc_config {
-  subnet_ids         = local.lambda_config.vpc.subnet_ids
-  security_group_ids = local.lambda_config.vpc.security_group_ids
+    subnet_ids         = local.lambda_config.vpc.subnet_ids
+    security_group_ids = local.lambda_config.vpc.security_group_ids
   }
 
   environment {
@@ -60,7 +54,7 @@ resource "aws_lambda_function" "gestionar_pedidos" {
   }
 }
 
-# Lambda function to initialize the database
+# Lambda: init_db
 
 data "archive_file" "lambda_init_db" {
   type        = "zip"
@@ -78,34 +72,14 @@ resource "aws_lambda_function" "init_db" {
 
   kms_key_arn = aws_kms_key.logs_key.arn
 
-  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
-
   vpc_config {
-  subnet_ids         = local.lambda_config.vpc.subnet_ids
-  security_group_ids = local.lambda_config.vpc.security_group_ids
+    subnet_ids         = local.lambda_config.vpc.subnet_ids
+    security_group_ids = local.lambda_config.vpc.security_group_ids
   }
 
   environment {
     variables = local.lambda_config.environment
   }
-}
-
-
-resource "aws_iam_role" "lambda_exec_role" {
-  name = "lambda_exec_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action = "sts:AssumeRole",
-        Effect = "Allow",
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      }
-    ]
-  })
 }
 
 resource "null_resource" "invoke_init_db" {
@@ -123,6 +97,36 @@ resource "null_resource" "invoke_init_db" {
   }
 }
 
+# Lambda: guardar_producto
+
+data "archive_file" "lambda_guardar_producto" {
+  type        = "zip"
+  source_dir  = "${path.module}/../lambda/gestionar_productos"
+  output_path = "${path.module}/gestionar_productos.zip"
+}
+
+resource "aws_lambda_function" "guardar_producto" {
+  function_name    = "guardar_producto"
+  role             = aws_iam_role.lambda_rds_role.arn
+  handler          = "index.handler"
+  runtime          = "nodejs18.x"
+  filename         = data.archive_file.lambda_guardar_producto.output_path
+  source_code_hash = data.archive_file.lambda_guardar_producto.output_base64sha256
+  timeout          = 10
+
+  kms_key_arn = aws_kms_key.logs_key.arn
+
+  vpc_config {
+    subnet_ids         = local.lambda_config.vpc.subnet_ids
+    security_group_ids = local.lambda_config.vpc.security_group_ids
+  }
+
+  environment {
+    variables = local.lambda_config.environment
+  }
+}
+
+# Seguridad de acceso
 
 resource "aws_security_group" "lambda_sg" {
   name        = "lambda-to-rds"
@@ -146,52 +150,4 @@ resource "aws_security_group_rule" "allow_lambda_access_rds" {
   security_group_id        = aws_security_group.rds_sg.id
   source_security_group_id = aws_security_group.lambda_sg.id
   description              = "Permite a Lambda acceder a RDS en el puerto 5432"
-}
-
-# guardar producto lambda function
-
-data "archive_file" "lambda_guardar_producto" {
-  type        = "zip"
-  source_dir  = "${path.module}/../lambda/gestionar_productos"
-  output_path = "${path.module}/gestionar_productos.zip"
-}
-
-resource "aws_lambda_function" "guardar_producto" {
-  function_name    = "guardar_producto"
-  role             = aws_iam_role.lambda_rds_role.arn
-  handler          = "index.handler"
-  runtime          = "nodejs18.x"
-  filename         = data.archive_file.lambda_guardar_producto.output_path
-  source_code_hash = data.archive_file.lambda_guardar_producto.output_base64sha256
-  timeout          = 10
-
-  kms_key_arn = aws_kms_key.logs_key.arn
-
-  code_signing_config_arn = aws_lambda_code_signing_config.default.arn
-
-  vpc_config {
-  subnet_ids         = local.lambda_config.vpc.subnet_ids
-  security_group_ids = local.lambda_config.vpc.security_group_ids
-  }
-
-  environment {
-    variables = local.lambda_config.environment
-  }
-}
-
-#firma code:
-
-resource "aws_signer_signing_profile" "lambda_signing_profile" {
-  platform_id = "AWSLambda-SHA384-ECDSA"
-}
-
-resource "aws_lambda_code_signing_config" "default" {
-  allowed_publishers {
-    signing_profile_version_arns = [
-      aws_signer_signing_profile.lambda_signing_profile.version_arn
-    ]
-  }
-  policies {
-    untrusted_artifact_on_deployment = "Enforce"
-  }
 }

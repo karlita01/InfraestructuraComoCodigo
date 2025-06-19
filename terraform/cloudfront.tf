@@ -1,23 +1,23 @@
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = "OAI for CloudFront to access S3 buckets"
+}
+
 resource "aws_cloudfront_distribution" "frontend_cdn" {
   origin {
-    domain_name = aws_s3_bucket_website_configuration.frontend_website.website_endpoint
+    domain_name = aws_s3_bucket.frontend.bucket_regional_domain_name
     origin_id   = "frontendS3"
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
     }
   }
 
   origin {
-    domain_name = aws_s3_bucket_website_configuration.frontend_website_backup.website_endpoint
+    domain_name = aws_s3_bucket.frontend_backup.bucket_regional_domain_name
     origin_id   = "frontendS3Backup"
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
     }
   }
 
@@ -37,32 +37,41 @@ resource "aws_cloudfront_distribution" "frontend_cdn" {
   enabled             = true
   default_root_object = "index.html"
 
-  default_cache_behavior {
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "origin-group-1"
-    response_headers_policy_id = aws_cloudfront_response_headers_policy.default_security.id
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
+default_cache_behavior {
+  viewer_protocol_policy     = "redirect-to-https"
+  allowed_methods            = ["GET", "HEAD"]
+  cached_methods             = ["GET", "HEAD"]
+  target_origin_id           = "origin-group-1"
+  response_headers_policy_id = aws_cloudfront_response_headers_policy.default_security.id
+
+    lambda_function_association {
+    event_type   = "viewer-request"
+    lambda_arn   = module.lambda_redirect.lambda_arn
+    include_body = false
   }
 
-  restrictions {
+  forwarded_values {
+  query_string = true
+  cookies {
+    forward = "all"
+  }
+}
+}
+
+
+restrictions {
     geo_restriction {
       restriction_type = "whitelist"
-      locations        = ["PE"] # Código de Perú
+      locations        = ["PE"]
     }
   }
 
-    viewer_certificate {
-    acm_certificate_arn            = "arn:aws:acm:us-east-2:612526786257:certificate/afaa74a6-8f1d-44f1-b7c4-65c4b55afacd"
-    ssl_support_method             = "sni-only"
+  viewer_certificate {
+    cloudfront_default_certificate = true
     minimum_protocol_version       = "TLSv1.2_2021"
   }
+
+  depends_on = [aws_cloudfront_origin_access_identity.oai]
 }
 
 resource "aws_cloudfront_response_headers_policy" "default_security" {
@@ -70,25 +79,25 @@ resource "aws_cloudfront_response_headers_policy" "default_security" {
 
   security_headers_config {
     xss_protection {
-      override = true
+      override   = true
       protection = true
       mode_block = true
     }
     frame_options {
-      override = true
-      frame_option = "DENY"
+      override      = true
+      frame_option  = "DENY"
     }
     referrer_policy {
-      override = true
+      override        = true
       referrer_policy = "no-referrer"
     }
     content_type_options {
       override = true
     }
     strict_transport_security {
-      override = true
-      include_subdomains = true
-      preload = true
+      override                 = true
+      include_subdomains       = true
+      preload                  = true
       access_control_max_age_sec = 63072000
     }
   }

@@ -17,7 +17,7 @@ resource "aws_api_gateway_account" "account" {
 resource "aws_cloudwatch_log_group" "api_gateway_logs" {
   name              = "/aws/api-gateway/productos-api"
   retention_in_days = 7
-  kms_key_id        = aws_kms_key.logs_key.arn
+  #kms_key_id        = aws_kms_key.logs_key.arn
 }
 
 resource "aws_api_gateway_stage" "prod" {

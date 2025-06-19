@@ -68,6 +68,30 @@ exports.handler = async () => {
     `);
 
     console.info(JSON.stringify({
+      event: "creando_tabla",
+      tabla: "usuarios",
+      timestamp: new Date().toISOString()
+    }));
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL
+      );
+    `);
+
+    console.info(JSON.stringify({
+      event: "insertando_usuario_admin",
+      status: "iniciando",
+      timestamp: new Date().toISOString()
+    }));
+    await client.query(`
+      INSERT INTO usuarios (username, password)
+      VALUES ('admin', 'admin')
+      ON CONFLICT (username) DO NOTHING;
+    `);
+
+    console.info(JSON.stringify({
       event: "tablas_creadas",
       status: "ok",
       timestamp: new Date().toISOString()

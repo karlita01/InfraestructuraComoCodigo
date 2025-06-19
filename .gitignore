@@ -19,3 +19,5 @@ terraform/secret.tfvars
 secrets.tfvars
 *.auto.tfvars
 results.xml/results_junitxml.xml
+.terraform.tfstate.lock.info
+config.js

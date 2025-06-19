@@ -28,3 +28,6 @@ output "cloudfront_url" {
   value       = "https://${aws_cloudfront_distribution.frontend_cdn.domain_name}"
 }
 
+output "cognito_client_id" {
+  value = aws_cognito_user_pool_client.user_pool_client.id
+}

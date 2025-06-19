@@ -1,7 +1,7 @@
 variable "region" {
   description = "Región donde se desplegarán los recursos en AWS"
   type        = string
-  default     = "us-east-2"
+  default     = "us-east-1"
 }
 
 variable "db_allocated_storage" {
@@ -25,7 +25,7 @@ variable "db_engine" {
 variable "db_engine_version" {
   description = "Versión del motor de base de datos"
   type        = string
-  default     = "14.14"
+  default     = "14.15"
 }
 
 variable "db_instance_class" {
@@ -68,4 +68,9 @@ variable "skip_final_snapshot" {
   description = "Si se debe omitir snapshot final"
   type        = bool
   default     = true
+}
+
+variable "manual_client_id" {
+  description = "Client ID de Cognito proporcionado manualmente"
+  type        = string
 }

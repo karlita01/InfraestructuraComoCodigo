@@ -15,11 +15,12 @@ resource "aws_db_instance" "productos_db" {
 
   auto_minor_version_upgrade = true
 
-  monitoring_interval = 60
+  #monitoring_role_arn = aws_iam_role.rds_monitoring_role.arn
+  #monitoring_interval = 0
 
   copy_tags_to_snapshot = true
 
-  multi_az = true
+  multi_az = false
 
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
@@ -28,7 +29,7 @@ resource "aws_db_instance" "productos_db" {
 
   storage_encrypted = true
 
-  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade", "error", "general", "slowquery"]
+  enabled_cloudwatch_logs_exports = []
 
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name

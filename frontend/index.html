@@ -2,9 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Minimarket J&J</title>
+  <title>Tiendita de Don Pepe</title>
+  <script src="config.js"></script>
 </head>
 <body>
+<script>
+(function () {
+  // Función para obtener la cookie
+  function getCookie(name) {
+    return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+  }
+  const idToken = getCookie('id_token');
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+
+  // Si no hay cookie ni fragmento, redirige a Cognito
+  if (!idToken && !params.get("id_token")) {
+    window.location.href = window.COGNITO_DOMAIN + "/login?response_type=token&client_id=" + window.COGNITO_CLIENT_ID + "&redirect_uri=" + encodeURIComponent(window.location.origin + "/");
+  }
+
+  // Si hay fragmento, guarda los tokens como cookies y limpia la URL
+  if (params.get("id_token") && params.get("access_token")) {
+    document.cookie = `id_token=${params.get("id_token")}; path=/; secure; samesite=lax; max-age=36000`;
+    document.cookie = `access_token=${params.get("access_token")}; path=/; secure; samesite=lax; max-age=36000`;
+    history.replaceState(null, "", window.location.pathname);
+  }
+})();
+</script>
   <h1>Bienvenido a la Tiendita de Don Pepe</h1>
 
   <button onclick="generarInforme()">📝 Generar Informe</button>
@@ -13,15 +37,13 @@
 
   <p id="respuesta"></p>
 
-  <script src="config.js"></script>
   <script>
-
     function generarInforme() {
       fetch(`${base}/informes`, { method: "GET" })
         .then(r => r.json())
         .then(m => {
-        mostrar(m.body);
-      });
+          mostrar(m.body);
+        });
     }
 
     function gestionarProducto() {
