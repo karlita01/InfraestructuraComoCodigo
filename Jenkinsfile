@@ -19,6 +19,17 @@ pipeline {
       }
     }
 
+    stage('Crear secret.tfvars') {
+      steps {
+        dir('terraform') {
+          writeFile file: 'secret.tfvars', text: '''
+db_username = "dbadmin123"
+db_password = "dbadmin123"
+'''
+        }
+      }
+    }
+
     stage('Terraform Init') {
       steps {
         dir('terraform') {
