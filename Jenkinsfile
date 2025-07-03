@@ -48,12 +48,25 @@ db_password = "dbadmin123"
       }
     }
 
-    stage('Terraform Action') {
+        stage('Terraform Action') {
       steps {
         dir('terraform') {
           script {
             if (params.DESTROY) {
-              sh 'terraform destroy -auto-approve -var-file="secret.tfvars"'
+              sh '''
+                echo "Destroy parcial (targets específicos)..."
+                terraform destroy \
+                  -target=aws_lambda_function.int_db \
+                  -target=aws_lambda_function.guardar_producto \
+                  -target=aws_lambda_function.gestionar_pedidos \
+                  -target=aws_lambda_function.generar_informes \
+                  -target=aws_db_instance.productos_db \
+                  -auto-approve \
+                  -var-file="secret.tfvars"
+
+                echo "Destroy final (todo lo demás)..."
+                terraform destroy -auto-approve -var-file="secret.tfvars"
+              '''
             } else {
               sh 'terraform apply -auto-approve -var-file="secret.tfvars"'
             }
