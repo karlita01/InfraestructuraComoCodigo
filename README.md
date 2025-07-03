@@ -122,3 +122,4 @@ CREATE TABLE pedido_productos (
 - **Morales Benites, Charlie**  
 - **Veneros Loloy, Johan**  
 - **Hilario Zavaleta, Benson**
+- **Fabian Sanchez, Angello**
