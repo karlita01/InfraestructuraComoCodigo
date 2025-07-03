@@ -1,7 +1,7 @@
 resource "aws_api_gateway_rest_api" "productos_api" {
   name = "productos-api"
 }
-// Sincronización de logs en API Gateway con CloudWatch
+
 resource "aws_api_gateway_account" "account" {
   cloudwatch_role_arn = aws_iam_role.apigateway_cloudwatch_role.arn
 }
@@ -46,6 +46,14 @@ locals {
     informes = {
       methods = ["GET"]
       lambda  = aws_lambda_function.generar_informes
+    }
+    login = {
+      methods = ["POST"]
+      lambda  = aws_lambda_function.auth_login
+    }
+    verificar_stock = {
+      methods = ["POST"]
+      lambda  = aws_lambda_function.verificar_stock
     }
   }
 

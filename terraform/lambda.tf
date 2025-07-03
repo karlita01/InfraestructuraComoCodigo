@@ -1,5 +1,30 @@
 # Lambda function to generar informes
 
+data "archive_file" "lambda_auth_login" {
+  type        = "zip"
+  source_dir  = "${path.module}/../lambda/auth_login"
+  output_path = "${path.module}/auth_login.zip"
+}
+
+resource "aws_lambda_function" "auth_login" {
+  function_name    = "auth_login"
+  role             = aws_iam_role.lambda_rds_role.arn
+  handler          = "index.handler"
+  runtime          = "nodejs18.x"
+  filename         = data.archive_file.lambda_auth_login.output_path
+  source_code_hash = data.archive_file.lambda_auth_login.output_base64sha256
+  timeout          = 10
+
+  vpc_config {
+  subnet_ids         = local.lambda_config.vpc.subnet_ids
+  security_group_ids = local.lambda_config.vpc.security_group_ids
+  }
+
+  environment {
+    variables = local.lambda_config.environment
+  }
+}
+
 data "archive_file" "lambda_generar_informes" {
   type        = "zip"
   source_dir  = "${path.module}/../lambda/generar_informes"

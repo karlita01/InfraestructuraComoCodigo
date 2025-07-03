@@ -5,6 +5,13 @@ resource "aws_s3_object" "index_html" {
   content_type = "text/html"
 }
 
+resource "aws_s3_object" "login_html" {
+  bucket       = aws_s3_bucket.frontend.id
+  key          = "login.html"
+  source       = "../frontend/login.html"
+  content_type = "text/html"
+}
+
 resource "aws_s3_object" "error_html" {
   bucket       = aws_s3_bucket.frontend.id
   key          = "error.html"
@@ -26,6 +33,7 @@ resource "aws_s3_object" "config_js" {
   content_type = "application/javascript"
   depends_on = [local_file.config_js]
 }
+
 resource "aws_s3_bucket" "frontend" {
   bucket         = "minimarket-frontend-charlie"
   force_destroy  = true
