@@ -25,7 +25,7 @@ variable "db_engine" {
 variable "db_engine_version" {
   description = "Versión del motor de base de datos"
   type        = string
-  default     = "14.14"
+  default     = "14.15"
 }
 
 variable "db_instance_class" {
