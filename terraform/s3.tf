@@ -27,7 +27,7 @@ resource "aws_s3_object" "config_js" {
   depends_on = [local_file.config_js]
 }
 resource "aws_s3_bucket" "frontend" {
-  bucket         = "minimarket-frontend-charlie"
+  bucket         = "minimarket-frontend-dpp"
   force_destroy  = true
 }
 
