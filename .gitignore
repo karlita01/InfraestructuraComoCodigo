@@ -1,14 +1,5 @@
 .terraform
 .terraform.lock.hcl
-lambda/gestionar_pedidos/node_modules
-lambda/gestionar_pedidos/package-lock.json
-lambda/gestionar_pedidos/package.json
-lambda/gestionar_productos/node_modules
-lambda/gestionar_productos/package-lock.json
-lambda/gestionar_productos/package.json
-lambda/init_db/node_modules
-lambda/init_db/package-lock.json
-lambda/init_db/package.json
 lambda/generar_informes/node_modules
 lambda/generar_informes/package-lock.json
 lambda/generar_informes/package.json
